@@ -43,8 +43,8 @@ function Adduser() {
 
     function Addnew() {
 
-        var id;
-        var cid;
+        var id; //user ko id
+        var cid; //category ko id
         const [count, setCount] = React.useState(0);
         const [name, setName] = React.useState('');
         const [contact, setContact] = React.useState('');
@@ -93,7 +93,8 @@ function Adduser() {
                 setError('Please enter a valid phone number.');
             } else {
                 setError('');
-                await addDoc(collection(db, "user"), {
+
+                await addDoc(collection(db, "user"), { // user banako 
                     name: name.charAt(0).toUpperCase() + name.slice(1),
                     contact: contact,
                     address: address,
@@ -101,17 +102,19 @@ function Adduser() {
                     dateadded: new Date().toLocaleString(),
 
                 }).then(function (docRef) {
-                    id = docRef.id;
+                    id = docRef.id; // user ko id nikaleko 
                 });
-                await addDoc(collection(db, "user", id, "category"), {
-                    category: ["N/A"]
 
+
+                await addDoc(collection(db, "user", id, "category"), {
+                    category: ["N/A"]  //tyo user ma auta category bhanne subdoc banako ra tes bhitra category bhanne array haleko 
+                                        // reason aba arko ma update matra garnu paros
                 }).then(function (docRef) {
                     cid = docRef.id;
                 });
 
                 await setDoc(doc(db, "user", id), {
-                    cid: cid,
+                    cid: cid, //agi ko user ma cid bhanne para meter banara tesko category ko id haleko 
 
                 },
                     { merge: true }
@@ -236,8 +239,7 @@ function Adduser() {
                 const documentRef = e;
                 const contactRef = doc(db, "user", documentRef);
                 await deleteDoc(contactRef);
-                // deletion pachi cleanup
-                // row update garne cleanup ko lagi
+                
 
                 setDeleted(true);
 

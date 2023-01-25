@@ -7,8 +7,19 @@ import { Button } from '@mui/material';
 import { db } from '../../firebase'
 import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Snackbar, Alert, Stack, Modal } from '@mui/material';
 
+
+//Algorithm:
+// category halne agadi add user ma auta N/A halera initialize gareko cha aba chiyeko update
+// product halne -> name, image, price, category (select garne mathi ko category bata) -> Reason sab ko aafno category haru huna milo 
+//product sab hali sake pachi auto view menu page ko qr generate garne yaha batai downloadable 
+//scalability user haru ko user emai pw dine user create garda tyo uid halne ani tei anusar sab display 
+
+
+
+
+
 function Addmenu() {
-    const {id} = useParams();
+    const {id} = useParams(); //user ko id 
     const [message, setmessage] = useState([]);
     const [original, setOriginal] = useState([]);
     const [addedIt, setAddedIt] = useState(false);
@@ -20,12 +31,13 @@ function Addmenu() {
             onSnapshot(ref, (doc) => {
                 setmessage(doc.data());
             });
-            console.log(message.cid)
+            console.log(message.cid) //category ko id 
             const ref2 = query(doc(db, 'user', id, 'category', message.cid));
             onSnapshot(ref2, (doc) => {
                 setOriginal(doc.data())
                 
             });
+            
         }
         catch (e) {
             console.log(e)
@@ -44,10 +56,12 @@ function Addmenu() {
         const handleSubmit = async (e) => {
             console.log(message.cid);
             try {
-                await updateDoc(doc(db, "user", id, "category", message.cid), {
-                    category: FieldValue.arrayUnion(cat)
+                const catref =doc(db, "user", "KASIxJvWyvx7GDhjwzUt", "category", "zzFFuE2LEl5vdBZLSYkW");
+                
+                await updateDoc(catref, {
+                    category:FieldValue.arrayUnion("apple")
 
-                },);
+                });
                 setAddedIt(true);
             }
             catch (e) {
