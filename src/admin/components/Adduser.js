@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase'
-import { collection, query, onSnapshot, doc, setDoc, addDoc, getDoc, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc, setDoc, addDoc, getDoc, getDocs, deleteDoc, updateDoc, FieldValue, arrayUnion } from 'firebase/firestore';
 import { Button } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { Alert, Stack, Modal } from '@mui/material';
@@ -119,6 +119,7 @@ function Adduser() {
                 },
                     { merge: true }
                 );
+               
 
 
                 setAddedIt(true);

@@ -14,7 +14,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, S
 //product sab hali sake pachi auto view menu page ko qr generate garne yaha batai downloadable 
 //scalability user haru ko user emai pw dine user create garda tyo uid halne ani tei anusar sab display 
 
-
+//map ma problem line no 100
 
 
 
@@ -27,12 +27,13 @@ function Addmenu() {
     const getCategory = () => {
 
         try {
-            const ref = query(doc(db, 'user', id));
-            onSnapshot(ref, (doc) => {
+             const ref = query(doc(db, 'user', id));
+             onSnapshot(ref, (doc) => {
                 setmessage(doc.data());
             });
-            console.log(message.cid) //category ko id 
+            
             const ref2 = query(doc(db, 'user', id, 'category', message.cid));
+            console.log(message.cid)
             onSnapshot(ref2, (doc) => {
                 setOriginal(doc.data())
                 
@@ -42,6 +43,7 @@ function Addmenu() {
         catch (e) {
             console.log(e)
         }
+        
     }
 
     const AddCategory = () => {
@@ -54,12 +56,15 @@ function Addmenu() {
         const disabled = cat === '' ;
 
         const handleSubmit = async (e) => {
+            e.preventDefault();
+
             console.log(message.cid);
+            var cid = message.cid
             try {
-                const catref =doc(db, "user", "KASIxJvWyvx7GDhjwzUt", "category", "zzFFuE2LEl5vdBZLSYkW");
+                const catref =doc(db, "user", id, "category", cid);
                 
                 await updateDoc(catref, {
-                    category:FieldValue.arrayUnion("apple")
+                    category:arrayUnion(cat)
 
                 });
                 setAddedIt(true);
@@ -76,7 +81,7 @@ function Addmenu() {
             <>
                 <form onSubmit={handleSubmit} className='mt-5 gap-2 flex flex-col items-center justify-center border dark:border-white-rgba-1 rounded p-5 mb-5'>
 
-                    <label className='text-sm font-bold dark:text-white-rgba-7'>Name</label>
+                <label className='text-sm font-bold dark:text-white-rgba-7'>Category</label>
                     <input maxLength={50} className='w-2/4 lg:w-1/4 p-2 border border-linkblue dark:border-white-rgba-2 dark:bg-grayer rounded dark:text-white-rgba-6 cont' type='text' value={cat} onChange={handleCat} placeholder="Eg. Lustu" />
 
                     
@@ -88,22 +93,26 @@ function Addmenu() {
                             className={`${disabled === true && 'bg-opacity-40 dark:bg-white-rgba-1 dark:text-white-rgba-2'} p-2 border rounded bg-linkblue hover:bg-linkbluer text-white uppercase w-1/8 dark:bg-white-rgba-3 dark:hover:bg-white-rgba-2`}
                             type='submit'
                         >
-                            Add
+                            ADD
                         </Button>
                     </div>
                 </form>
+                {original.category?.map((cato) => (
+                    <div>{cato}</div>
+                ))}
+      
             </>
         )
     }
 
     useEffect(() => {
-                getCategory();
-            }, [])
+        getCategory();
+            },[])
             
     return (
         <div><Sidebar>
             <AddCategory />
-           
+
         </Sidebar></div>
     )
     
