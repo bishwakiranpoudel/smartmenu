@@ -32,18 +32,30 @@ function Addmenu() {
                 setmessage(doc.data());
             });
             
-            const ref2 = query(doc(db, 'user', id, 'category', message.cid));
-            console.log(message.cid)
-            onSnapshot(ref2, (doc) => {
-                setOriginal(doc.data())
-                
-            });
+            
             
         }
         catch (e) {
             console.log(e)
         }
         
+    }
+
+    const getCategoryTwo = () => {
+
+        try {
+            
+           
+           const ref2 = query(doc(db, 'user', id, 'category', message.cid))
+           onSnapshot(ref2, (doc) => {
+               setOriginal(doc.data())
+               
+           });
+           
+       }
+       catch (e) {
+           console.log(e)
+       }
     }
 
     const AddCategory = () => {
@@ -76,7 +88,7 @@ function Addmenu() {
                 setAddedIt(false);
             }, 3000);
         }
-
+        var array = original.category;
         return (
             <>
                 <form onSubmit={handleSubmit} className='mt-5 gap-2 flex flex-col items-center justify-center border dark:border-white-rgba-1 rounded p-5 mb-5'>
@@ -97,7 +109,7 @@ function Addmenu() {
                         </Button>
                     </div>
                 </form>
-                {original.category?.map((cato) => (
+                {array?.map((cato) => (
                     <div>{cato}</div>
                 ))}
       
@@ -105,15 +117,79 @@ function Addmenu() {
         )
     }
 
+    const AddProduct = () => {
+        const [pro, setPro] =React.useState('');//name
+        const [pri, setPri] =React.useState('');//price
+
+        const handlePro = (event) => {
+            setPro(event.target.value);
+        }
+        const handlePri = (event) => {
+            setPri(event.target.value);
+        }
+        const disabled = pro === '' || pri === ''  ;
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            
+            try {
+                await addDoc(collection(db, "user", id, "product"), { // user banako 
+                    name: pro,
+                    price: pri,
+
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
+            setTimeout(() => {
+                setPro('');
+                setPri('');
+                setAddedIt(false);
+            }, 3000);
+        }
+
+        return (
+            <>
+                <form onSubmit={handleSubmit} className='mt-5 gap-2 flex flex-col items-center justify-center border dark:border-white-rgba-1 rounded p-5 mb-5'>
+
+                <label className='text-sm font-bold dark:text-white-rgba-7'>Product Name</label>
+                    <input maxLength={50} className='w-2/4 lg:w-1/4 p-2 border border-linkblue dark:border-white-rgba-2 dark:bg-grayer rounded dark:text-white-rgba-6 cont' type='text' value={pro} onChange={handlePro} placeholder="Eg. Lustu" />
+
+                    <label className='text-sm font-bold dark:text-white-rgba-7'>Price</label>
+                    <input maxLength={50} className='w-2/4 lg:w-1/4 p-2 border border-linkblue dark:border-white-rgba-2 dark:bg-grayer rounded dark:text-white-rgba-6 cont' type='text' value={pri} onChange={handlePri} placeholder="Eg. Lustu" />
+
+                    
+                    {addedIt && <Alert variant='outlined' className='text-green-500 text-sm my-3'>user added successfully</Alert>}
+
+                    <div className='flex gap-2'>
+                        <Button
+                            disabled={disabled}
+                            className={`${disabled === true && 'bg-opacity-40 dark:bg-white-rgba-1 dark:text-white-rgba-2'} p-2 border rounded bg-linkblue hover:bg-linkbluer text-white uppercase w-1/8 dark:bg-white-rgba-3 dark:hover:bg-white-rgba-2`}
+                            type='submit'
+                        >
+                            ADD
+                        </Button>
+                    </div>
+                </form>
+            </>
+        )
+    }
+
+
+
     useEffect(() => {
         getCategory();
-            },[])
+        getCategoryTwo();
+            },[message,original])
             
     return (
-        <div><Sidebar>
+        <Sidebar>
             <AddCategory />
+            <AddProduct/>
 
-        </Sidebar></div>
+        </Sidebar>
     )
     
 
