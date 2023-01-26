@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import { db } from '../../firebase'
 import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Snackbar, Alert, Stack, Modal } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
+import { CloseOutlined } from '@mui/icons-material';
 
 //Algorithm:
 // category halne agadi add user ma auta N/A halera initialize gareko cha aba chiyeko update
@@ -14,7 +15,9 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 //product sab hali sake pachi auto view menu page ko qr generate garne yaha batai downloadable 
 //scalability user haru ko user emai pw dine user create garda tyo uid halne ani tei anusar sab display 
 
-//original i.e category aakai chaian line no 38
+//category lai tanna ayena 
+
+
 
 
 
@@ -32,39 +35,24 @@ function Addmenu() {
     const [updated, setUpdated] = React.useState(false);
     const [openDelete, setOpenDelete] = React.useState(false);
     const [done,setDone] = React.useState(false);
-    var array;
+    var array= [];
 
-
-    const getCategoryTwo = async() => {
-        try {
-            const ref2 = await getDoc(doc(db, 'user', id, 'category', message.cid))
-            
-                setOriginal(ref2.data())
-                console.log(original)
-           
-        }
-        catch (e) {
-            console.log(e)
-        }
-        array = original.category;
-        setDone(true);
-        setTimeout(()=>setDone(false),300);
-    }
 
     const getCategory = async () => {
         try {
+            
             const ref = await getDoc(doc(db, 'user', id));
         
                 setmessage(ref.data());
-                console.log(message)
-           
+            
         }
         catch (e) {
             console.log(e)
         }
         setDone(true);
         setTimeout(()=>setDone(false),300);
-        getCategoryTwo();
+        setTimeout(()=>setDone(false),300);
+        
 
     }
 
@@ -100,7 +88,7 @@ function Addmenu() {
 
         
         
-
+        
         return (
             <>
                 <form onSubmit={handleSubmit} className='mt-5 gap-2 flex flex-col items-center justify-center border dark:border-white-rgba-1 rounded p-5 mb-5'>
@@ -121,10 +109,6 @@ function Addmenu() {
                         </Button>
                     </div>
                 </form>
-                {array?.map((cato) => (
-                    <div>{cato}</div>
-                ))}
-
             </>
         )
     }
@@ -187,6 +171,9 @@ function Addmenu() {
                         </Button>
                     </div>
                 </form>
+                {/* {original[0].category.map((cato) => (
+                    <div>{cato}</div>
+                ))} */}
             </>
         )
     }
@@ -283,7 +270,7 @@ function Addmenu() {
 
         return (
             <>
-                <div className="text-black text-xl bold">users</div>
+                <div className="text-black text-xl bold">Products</div>
                 {deleted && <Alert variant='outlined' className='text-green-500 text-sm my-3'>user deleted successfully</Alert>}
                 <div className='max-h-[80%] h-full items-left'>
                     <DataGrid
